@@ -4,7 +4,8 @@ import {
   View,
   TouchableOpacity,
   Text,
-  StyleSheet
+  StyleSheet,
+  LayoutAnimation
 } from 'react-native';
 
 function getInInteractionsMedicinesAsArray(inInteractionsMedicinesAsMap){
@@ -15,21 +16,23 @@ function getInInteractionsMedicinesAsArray(inInteractionsMedicinesAsMap){
 @observer
 class Item extends Component {
   render(){
+    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
     const { data: dataMobx, onPress } = this.props;
     const { name, selected: isActive, inInteractions } = dataMobx.toJS();
     const medicinesInInteractions = inInteractions.get('medicines');
     const textInInteractions = getInInteractionsMedicinesAsArray(medicinesInInteractions).join(', ');
-    const backgroundColor = isActive ? 'grey' : 'white';
+    const isInInteractions = !!medicinesInInteractions.size;
+    const containerStyles = [styles.container, isActive ? (isInInteractions ? styles.isInInteractions : styles.isActive) : null];
     return(
       <TouchableOpacity 
         onPress={onPress}
         activeOpacity={0.8}
       >
-        <View style={[styles.container, {backgroundColor}]}>
+        <View style={containerStyles}>
           <Text style={styles.textName}>
             { name }
           </Text>
-          { !!medicinesInInteractions.size &&
+          { isInInteractions &&
             <Text style={styles.textInteractions}>
               {textInInteractions}
             </Text>
@@ -48,7 +51,16 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     borderBottomWidth: StyleSheet.hairlineWidth,
-    borderColor: 'grey'
+    borderColor: 'rgba(127,140,141 ,1)',
+    backgroundColor: 'white'
+  },
+  isActive: {
+    borderColor: 'white',
+    backgroundColor: 'rgba(102,187,106 ,1)'
+  },
+  isInInteractions: {
+    borderColor: 'white',
+    backgroundColor: 'rgba(231,76,60 ,1)'
   },
   textName: {
     color: 'black',

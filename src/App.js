@@ -3,39 +3,57 @@ import {
   NavigatorIOS,
   StyleSheet
 } from 'react-native';
-import Home from 'views/Home';
+import { COLOR, ThemeProvider } from 'react-native-material-ui';
+import PatientSettings from 'views/PatientSettings';
+import MedicinesSearch from 'views/MedicinesSearch';
 import store from './store';
 
-const routes= {
-  'home': {
-    title: 'Home',
-    component: Home,
-    passProps: { store }
+class App extends Component {
+  constructor(props, context){
+    super(props, context);
+    this.getRoute = this.getRoute.bind(this);
   }
-};
 
-const defaultPassProps = { getRoute };
-
-function getRoute(key, { title, passProps } = {}){
-  const route = routes[key];
-  return {
-    ...route,
-    title: title || route.title,
-    passProps: {
-      ...defaultPassProps,
-      ...route.passProps,
-      ...passProps
+  routes = {
+    'patient-settings': {
+      title: 'Pacjent',
+      component: PatientSettings,
+      rightButtonTitle: 'Leki',
+      onRightButtonPress: (props) => {
+        this.navigator.push(this.getRoute('medicines-search'));
+      }
+    },
+    'medicines-search': {
+      title: 'Leki',
+      component: MedicinesSearch,
+      rightButtonTitle: 'Wybrane'
     }
   };
-}
 
-class App extends Component {
+  defaultPassProps = { getRoute: this.getRoute, store };
+
+  getRoute(key, { title, passProps } = {}){
+    const route = this.routes[key];
+    return {
+      ...route,
+      title: title || route.title,
+      passProps: {
+        ...this.defaultPassProps,
+        ...route.passProps,
+        ...passProps
+      }
+    };
+  }
+
   render(){
     return(
-      <NavigatorIOS
-        initialRoute={getRoute('home')}
-        style={styles.container}
-      />
+      <ThemeProvider>
+        <NavigatorIOS
+          ref={(ref) => this.navigator = ref}
+          initialRoute={this.getRoute('patient-settings')}
+          style={styles.container}
+        />
+      </ThemeProvider>
     );
   }
 }
@@ -44,6 +62,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1
   }
-})
+});
 
 export default App;
