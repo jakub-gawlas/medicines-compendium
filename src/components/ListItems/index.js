@@ -26,9 +26,9 @@ class ListItems extends Component{
   }
 
   _renderHeader(){
-    const { onSearchChange } = this.props;
+    const { onSearchChange, searchValue } = this.props;
     return(
-      <Search onChangeText={onSearchChange} />
+      <Search onChangeText={onSearchChange} value={searchValue} />
     );
   }
 

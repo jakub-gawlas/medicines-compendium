@@ -7,7 +7,7 @@ import {
 import ListItems from 'components/ListItems';
 
 @observer
-class Home extends Component{
+class Home extends Component {
   constructor(props, context){
     super(props, context);
 
@@ -31,6 +31,7 @@ class Home extends Component{
           items={this.store.seenDataSource} 
           onSearchChange={this._onSearchChange}
           onPressItem={this._onPressItem}
+          searchValue={this.store.filter.get('query')}
         />
       </View>
     );

@@ -5,12 +5,13 @@ import {
   StyleSheet
 } from 'react-native';
 
-function Search({ onChangeText }){
+function Search({ onChangeText, value }){
   return(
     <View style={styles.container}>
       <TextInput
-        placeholder="Search..."
+        placeholder="Wyszukaj..."
         onChangeText={onChangeText}
+        value={value}
         style={styles.input}
         autoCapitalize="none"
         autoCorrect={false}
