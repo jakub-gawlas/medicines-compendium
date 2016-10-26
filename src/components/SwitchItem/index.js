@@ -65,6 +65,7 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
+    alignItems: 'center',
     paddingHorizontal: 30,
     paddingVertical: 15,
     borderBottomWidth: StyleSheet.hairlineWidth,
@@ -74,11 +75,11 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
+    alignItems: 'center',
     marginLeft: 20
   },
   label: {
-    fontSize: 18,
-    marginTop: 6
+    fontSize: 18
   },
   icon: {
     fontSize: 35

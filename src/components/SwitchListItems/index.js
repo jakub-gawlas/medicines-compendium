@@ -22,9 +22,10 @@ const styles = {
     flex: 1
   },
   text: {
-    marginLeft: 30,
-    marginBottom: 10,
-    fontSize: 16
+    textAlign: 'center',
+    marginTop: 10,
+    fontSize: 16,
+    fontWeight: 'bold'
   }
 };
 

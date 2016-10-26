@@ -15,6 +15,7 @@ function Search({ onChangeText }){
         autoCapitalize="none"
         autoCorrect={false}
         returnKeyType="search"
+        keyboardType="default"
       />
     </View>
   );
