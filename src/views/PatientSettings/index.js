@@ -1,17 +1,41 @@
 import React, { Component } from 'react';
 import {
   View,
-  Text,
   StyleSheet
 } from 'react-native';
+import SwitchListItems from 'components/SwitchListItems';
+
+const items = [
+  {
+    id: 0,
+    label: 'Ciąża',
+    iconName: 'pregnant-woman'
+  },
+  {
+    id: 1,
+    label: 'Karmienie piersią',
+    iconName: 'child-friendly'
+  },
+  {
+    id: 2,
+    label: 'Kierowanie pojazdami',
+    iconName: 'directions-car'
+  },
+  {
+    id: 3,
+    label: 'Alkohol',
+    iconName: 'local-bar'
+  }
+];
 
 class PatientSettings extends Component {
   render(){
     return(
       <View style={styles.container}>
-        <Text>
-          HELLO!
-        </Text>
+        <SwitchListItems 
+          headerText="Przeciwwskazania:"
+          items={items} 
+        />
       </View>
     );
   }
@@ -20,8 +44,13 @@ class PatientSettings extends Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center'
+    alignItems: 'stretch',
+    marginTop: 80
+  },
+  text: {
+    marginLeft: 30,
+    marginBottom: 10,
+    fontSize: 16
   }
 });
 
