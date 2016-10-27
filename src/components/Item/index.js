@@ -9,11 +9,6 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
-function getInInteractionsMedicinesAsArray(inInteractionsMedicinesAsMap){
-  const inInteractionsMedicinesJS = inInteractionsMedicinesAsMap.toJS();
-  return Object.entries(inInteractionsMedicinesJS).map(([key, value]) => value.get('name'));
-}
-
 const CustomLayoutSpring = {
   duration: 300,
   create: {
@@ -31,17 +26,21 @@ const CustomLayoutSpring = {
 @observer
 class Item extends Component {
   render(){
+
     LayoutAnimation.configureNext(CustomLayoutSpring);
-    const { data: dataMobx, onPress } = this.props;
-    const { name, selected: isActive, inInteractions } = dataMobx.toJS();
-    const medicinesInInteractions = inInteractions.get('medicines');
-    const textInInteractions = getInInteractionsMedicinesAsArray(medicinesInInteractions).join(', ');
-    const isInInteractions = !!medicinesInInteractions.size;
+    const { data, onPress } = this.props;
+    const { name, selected: isActive, inInteractions } = data;
+
+    const medicinesInInteractions = inInteractions.medicines;
+    const textInInteractions = medicinesInInteractions.map(({ name }) => name).join(', ');
+    const isInInteractions = !!medicinesInInteractions.length;
+
     const icon = isActive ? 
       (isInInteractions ? 
         <Icon name="error-outline" style={styles.bigIcon} color="rgba(231,76,60 ,1)" /> : 
         <Icon name="done" style={styles.bigIcon} color ="rgba(102,187,106 ,1)" />) 
       : null;
+
     return(
       <TouchableOpacity 
         onPress={onPress}

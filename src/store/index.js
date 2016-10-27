@@ -5,20 +5,8 @@ import data from './data';
 class State {
 
   constructor(){
-    this.all = {};
-    this.interactions = new Map();
-    data.forEach(({id, name, interactions}) => { 
-      this.all[id] =  
-        asMap({
-          selected: false,
-          inInteractions: asMap({
-            medicines: asMap()
-          }),
-          id,
-          name,
-          interactions
-        });
-    });
+    this.medicines = {};
+    data.medicines.forEach((item) => this.medicines[item.id] = item);  
   }
 
   dataSource = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
@@ -28,13 +16,30 @@ class State {
     query: null
   });
 
+  @observable
+  selected = asMap();
+
+  @computed
+  get medicinesState(){
+    return Object.values(this.medicines).map((item) => {
+      const { id: itemId, interactions } = item;
+      const isSelected = !!this.selected.get(itemId);
+      const inInteractionsMedicinesIds = interactions.medicines.filter((interactionsItemId) => !!this.selected.get(interactionsItemId));
+      const inInteractionsMedicines = inInteractionsMedicinesIds.map((id) => this.medicines[id]);
+      return {
+        ...item,
+        selected: isSelected,
+        inInteractions: {
+          medicines: inInteractionsMedicines
+        }
+      };
+    });
+  }
+
   @computed
   get seen(){
     const query = this.filter.get('query');
-    return Object.values(this.all).filter((item) => {
-      const name = item.get('name');
-      return !query || (name.toLowerCase().includes(query.toLowerCase()));
-    });
+    return this.medicinesState.filter(({ name }) => (!query || (name.toLowerCase().includes( query.toLowerCase() )) ));
   }
 
   @computed
@@ -50,39 +55,10 @@ class State {
 
   @action
   setSelected(id){
-    const item = this.all[id];
-    if(!item)
-      return;
-    const selected = item.get('selected');
-    item.set('selected', !selected);
-    selected ? this.updateMedicinesInteractionsOnRemove(id) : this.updateMedicinesInteractionsOnAdd(id);
-  }
+    if(!this.selected.get(id))
+      return this.selected.set(id, true);
 
-  @action updateMedicinesInteractionsOnAdd(newItemId){
-    const newItem = this.all[newItemId];
-    const interactionsMedicines = newItem.get('interactions').medicines;
-    const newItemInInteractionsMedicines = newItem.get('inInteractions').get('medicines');
-    interactionsMedicines.forEach((itemId) => {
-      const item = this.all[itemId];
-      if(!item.get('selected'))
-        return;
-
-      const itemInInteractionsMedicines = item.get('inInteractions').get('medicines');
-      itemInInteractionsMedicines.set(newItemId, newItem);
-      newItemInInteractionsMedicines.set(itemId, item);
-    });
-  }
-
-
-  @action updateMedicinesInteractionsOnRemove(removedItemId){
-    const removedItem = this.all[removedItemId];
-    const inInteractionsMedicines = removedItem.get('inInteractions').get('medicines');
-    inInteractionsMedicines.forEach((value, key) => {
-      const item = this.all[key];
-      const itemInInteractionsMedicines = item.get('inInteractions').get('medicines');
-      itemInInteractionsMedicines.delete(removedItemId);
-    });
-    inInteractionsMedicines.clear();
+    this.selected.delete(id);
   }
 
 }

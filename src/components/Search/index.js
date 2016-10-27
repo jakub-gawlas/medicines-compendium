@@ -34,7 +34,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     borderRadius: 20,
     borderWidth: 1,
-    borderColor: 'grey'
+    borderColor: 'rgba(127,140,141 ,1)'
   }
 });
 

@@ -16,12 +16,10 @@ class ListItems extends Component{
     this._renderHeader = this._renderHeader.bind(this);
   }
 
-  _renderRow(dataMobx){
-    const data = dataMobx.toJS();
-    const { selected, id, ...rest} = data;
+  _renderRow(data){
     const { onPressItem } = this.props;
     return(
-      <Item data={dataMobx} onPress={() => onPressItem(id)} />
+      <Item data={data} onPress={() => onPressItem(data.id)} />
     );
   }
 
