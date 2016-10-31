@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import {
   TouchableOpacity,
   View,
@@ -8,56 +8,33 @@ import {
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialIcons';
 
-class SwitchItem extends Component {
+function SwitchItem({ name, iconName, selected, onPress }){
+  
+  const iconColor = selected ? 'rgba(66,66,66 ,1)' : 'rgba(189,189,189 ,1)';
 
-  constructor(props, context){
-    super(props, context);
-    this.state = {
-      switchValue: false
-    };
-    this._onPressItem = this._onPressItem.bind(this);
-    this._onValueChange = this._onValueChange.bind(this);
-  }
-
-  _onPressItem(){
-    const { switchValue } = this.state;
-    this._onValueChange(!switchValue);
-  }
-
-  _onValueChange(value){
-    this.setState({
-      switchValue: value
-    });
-  }
-
-  render(){
-    const { switchValue } = this.state;
-    const { label, iconName } = this.props;
-    const iconColor = switchValue ? 'rgba(66,66,66 ,1)' : 'rgba(189,189,189 ,1)';
-    return(
-      <TouchableOpacity 
-        onPress={this._onPressItem}
-        activeOpacity={1}
-      >
-        <View style={styles.container}>
-          <Switch 
-            onValueChange={this._onValueChange} 
-            value={switchValue} 
-          />
-          <View style={styles.right}>
-            <Text style={styles.label}>
-              {label}
-            </Text>
-            <Text>
-              {iconName && 
-                <Icon name={iconName} style={styles.icon} color={iconColor} />
-              } 
-            </Text>
-          </View>
+  return(
+    <TouchableOpacity 
+      onPress={onPress}
+      activeOpacity={1}
+    >
+      <View style={styles.container}>
+        <Switch 
+          onValueChange={onPress} 
+          value={selected} 
+        />
+        <View style={styles.right}>
+          <Text style={styles.name}>
+            {name}
+          </Text>
+          <Text>
+            {iconName && 
+              <Icon name={iconName} style={styles.icon} color={iconColor} />
+            } 
+          </Text>
         </View>
-      </TouchableOpacity>
-    );
-  }
+      </View>
+    </TouchableOpacity>
+  );
 }
 
 const styles = StyleSheet.create({
@@ -78,7 +55,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginLeft: 20
   },
-  label: {
+  name: {
     fontSize: 18
   },
   icon: {

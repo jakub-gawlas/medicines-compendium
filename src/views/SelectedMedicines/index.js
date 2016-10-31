@@ -1,23 +1,18 @@
 import React, { Component } from 'react';
-import { observer } from 'mobx-react/native';
-import { 
+import { observer } from 'mobx-react/native'; 
+import {
   View,
   StyleSheet
 } from 'react-native';
 import ListItems from 'components/ListItems';
 
 @observer
-class Home extends Component {
+class SelectedMedicines extends Component {
   constructor(props, context){
     super(props, context);
 
     this.store = this.props.store;
-    this._onSearchChange = this._onSearchChange.bind(this);
     this._onPressItem = this._onPressItem.bind(this);
-  }
-
-  _onSearchChange(value){
-    this.store.setFilterQuery(value);
   }
 
   _onPressItem(id){
@@ -28,20 +23,19 @@ class Home extends Component {
     return(
       <View style={styles.container}>
         <ListItems 
-          items={this.store.seenMedicinesDataSource} 
-          onSearchChange={this._onSearchChange}
-          onPressItem={this._onPressItem}
-          searchValue={this.store.filter.get('query')}
+            items={this.store.selectedMedicinesDataSource} 
+            onPressItem={this._onPressItem}
+            showSearch={false}
         />
       </View>
     );
   }
 }
 
-const styles = StyleSheet.create({
+const styles = {
   container: {
     flex: 1
   }
-});
+};
 
-export default Home;
+export default SelectedMedicines;

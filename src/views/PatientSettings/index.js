@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { observer } from 'mobx-react/native';
 import {
   View,
   ScrollView,
@@ -7,30 +8,19 @@ import {
 import Input from 'components/Input';
 import SwitchListItems from 'components/SwitchListItems';
 
-const items = [
-  {
-    id: 0,
-    label: 'Ciąża',
-    iconName: 'pregnant-woman'
-  },
-  {
-    id: 1,
-    label: 'Karmienie piersią',
-    iconName: 'child-friendly'
-  },
-  {
-    id: 2,
-    label: 'Kierowanie pojazdami',
-    iconName: 'directions-car'
-  },
-  {
-    id: 3,
-    label: 'Alkohol',
-    iconName: 'local-bar'
-  }
-];
-
+@observer
 class PatientSettings extends Component {
+  constructor(props, context){
+    super(props, context);
+
+    this.store = this.props.store;
+    this._onPressContraindications = this._onPressContraindications.bind(this);
+  }
+
+  _onPressContraindications(id){
+    this.store.setSelectedContraindications(id);
+  }
+
   render(){
     return(
       <ScrollView contentContainerStyle={styles.container}>
@@ -40,7 +30,8 @@ class PatientSettings extends Component {
         </View>
         <SwitchListItems 
           headerText="PRZECIWWSKAZANIA"
-          items={items} 
+          items={this.store.contraindicationsState} 
+          onPressItem={this._onPressContraindications}
         />
       </ScrollView>
     );

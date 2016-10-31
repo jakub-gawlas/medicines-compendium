@@ -8,10 +8,11 @@ import {
 import Item from 'components/Item';
 import Search from 'components/Search';
 
-class ListItems extends Component{
+class ListItems extends Component {
 
   constructor(props, context){
     super(props, context);
+
     this._renderRow = this._renderRow.bind(this);
     this._renderHeader = this._renderHeader.bind(this);
   }
@@ -24,10 +25,12 @@ class ListItems extends Component{
   }
 
   _renderHeader(){
-    const { onSearchChange, searchValue } = this.props;
-    return(
-      <Search onChangeText={onSearchChange} value={searchValue} />
-    );
+    const { showSearch = true, onSearchChange, searchValue } = this.props;
+    const search = showSearch ?
+      <Search onChangeText={onSearchChange} value={searchValue} /> :
+      null;
+
+    return search;
   }
 
   render(){

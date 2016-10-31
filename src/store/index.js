@@ -6,7 +6,10 @@ class State {
 
   constructor(){
     this.medicines = {};
-    data.medicines.forEach((item) => this.medicines[item.id] = item);  
+    data.medicines.forEach((item) => this.medicines[item.id] = item);
+
+    this.contraindications = {};
+    data.contraindications.forEach((item) => this.contraindications[item.id] = item);  
   }
 
   dataSource = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
@@ -17,34 +20,60 @@ class State {
   });
 
   @observable
-  selected = asMap();
+  selectedContraindications = asMap();
+
+  @observable
+  selectedMedicines = asMap();
+
+  @computed
+  get contraindicationsState(){
+    return Object.values(this.contraindications).map((item) => {
+      const { id } = item;
+      const isSelected = !!this.selectedContraindications.get(id);
+      return {
+        ...item,
+        selected: isSelected
+      }
+    });
+  }
 
   @computed
   get medicinesState(){
     return Object.values(this.medicines).map((item) => {
       const { id: itemId, interactions } = item;
-      const isSelected = !!this.selected.get(itemId);
-      const inInteractionsMedicinesIds = interactions.medicines.filter((interactionsItemId) => !!this.selected.get(interactionsItemId));
+
+      const isSelected = !!this.selectedMedicines.get(itemId);
+
+      const inInteractionsMedicinesIds = interactions.medicines.filter((id) => !!this.selectedMedicines.get(id));
       const inInteractionsMedicines = inInteractionsMedicinesIds.map((id) => this.medicines[id]);
+      const inInteractionsContraindicationsIds = interactions.contraindications.filter((id) => !!this.selectedContraindications.get(id));
+      const inInteractionsContraindications = inInteractionsContraindicationsIds.map((id) => this.contraindications[id]); 
+
       return {
         ...item,
         selected: isSelected,
         inInteractions: {
-          medicines: inInteractionsMedicines
+          medicines: inInteractionsMedicines,
+          contraindications: inInteractionsContraindications
         }
       };
     });
   }
 
+  @computed 
+  get selectedMedicinesDataSource(){
+    return this.dataSource.cloneWithRows(this.medicinesState.filter(({ selected }) => !!selected));
+  }
+
   @computed
-  get seen(){
+  get seenMedicines(){
     const query = this.filter.get('query');
     return this.medicinesState.filter(({ name }) => (!query || (name.toLowerCase().includes( query.toLowerCase() )) ));
   }
 
   @computed
-  get seenDataSource(){
-    return this.dataSource.cloneWithRows(this.seen);
+  get seenMedicinesDataSource(){
+    return this.dataSource.cloneWithRows(this.seenMedicines);
   }
 
   @action
@@ -54,11 +83,19 @@ class State {
   }
 
   @action
-  setSelected(id){
-    if(!this.selected.get(id))
-      return this.selected.set(id, true);
+  setSelectedContraindications(id){
+    if(!this.selectedContraindications.get(id))
+      return this.selectedContraindications.set(id, true);
+    
+    this.selectedContraindications.delete(id);
+  }
 
-    this.selected.delete(id);
+  @action
+  setSelectedMedicines(id){
+    if(!this.selectedMedicines.get(id))
+      return this.selectedMedicines.set(id, true);
+
+    this.selectedMedicines.delete(id);
   }
 
 }

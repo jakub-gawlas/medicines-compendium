@@ -6,13 +6,13 @@ import {
 } from 'react-native';
 import SwitchItem from 'components/SwitchItem';
 
-function SwitchListItems({ items, headerText }){
+function SwitchListItems({ items, headerText, onPressItem }){
   return(
     <View style={styles.container}>
       <Text style={styles.text}>
         {headerText}
       </Text>
-      {items.map((item) => <SwitchItem {...item} key={item.id} />)}
+      {items.map((item) => <SwitchItem {...item} onPress={() => onPressItem(item.id)} key={item.id} />)}
     </View>
   );
 }

@@ -6,6 +6,7 @@ import {
 import { COLOR, ThemeProvider } from 'react-native-material-ui';
 import PatientSettings from 'views/PatientSettings';
 import MedicinesSearch from 'views/MedicinesSearch';
+import SelectedMedicines from 'views/SelectedMedicines';
 import store from './store';
 
 class App extends Component {
@@ -26,7 +27,14 @@ class App extends Component {
     'medicines-search': {
       title: 'Leki',
       component: MedicinesSearch,
-      rightButtonTitle: 'Wybrane'
+      rightButtonTitle: 'Wybrane',
+      onRightButtonPress: (props) => {
+        this.navigator.push(this.getRoute('selected-medicines'));
+      }
+    },
+    'selected-medicines': {
+      title: 'Wybrane',
+      component: SelectedMedicines
     }
   };
 
